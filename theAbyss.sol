@@ -90,7 +90,6 @@ contract TheAbyssCrowdsale is Ownable, SafeMath {
 
     uint256 public constant PRESALE_ETHER_MIN_CONTRIB = 5 ether;
     uint256 public constant SALE_ETHER_MIN_CONTRIB = 0.1 ether;
-    uint256 public constant MAX_GAS_PRICE = 50000000000;    // 50 GWei maximum gas price for contribution transactions
 
     uint256 public totalEtherContributed = 0;
     uint256 public totalTokensToSupply = 0;
@@ -110,11 +109,6 @@ contract TheAbyssCrowdsale is Ownable, SafeMath {
 
     modifier checkContribution() {
         require((now >= preSaleStartTime && now < preSaleEndTime && msg.value >= PRESALE_ETHER_MIN_CONTRIB) || (now >= saleStartTime && now < saleEndTime && msg.value >= SALE_ETHER_MIN_CONTRIB));
-        _;
-    }
-
-    modifier validateGasPrice() {
-        assert(tx.gasprice <= MAX_GAS_PRICE);
         _;
     }
 
@@ -162,7 +156,7 @@ contract TheAbyssCrowdsale is Ownable, SafeMath {
         processContribution();
     }
 
-    function processContribution() private checkContribution validateGasPrice {
+    function processContribution() private checkContribution {
         uint256 bonusNum = 0;
         uint256 bonusDenom = 100;
         (bonusNum, bonusDenom) = getBonus();
