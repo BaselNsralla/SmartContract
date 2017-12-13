@@ -137,11 +137,11 @@ contract TheAbyssCrowdsale is Ownable, SafeMath, Pausable {
 
     uint256 public constant HARD_CAP = 100000 ether;
 
-    uint256 public PRE_SALE_START_TIME = 1513263600;
-    uint256 public PRE_SALE_END_TIME = 1514764740;
+    uint256 public constant PRE_SALE_START_TIME = 1513263600;
+    uint256 public constant PRE_SALE_END_TIME = 1514764740;
 
-    uint256 public SALE_START_TIME = 1515510000;
-    uint256 public SALE_END_TIME = 1518739140;
+    uint256 public constant SALE_START_TIME = 1515510000;
+    uint256 public constant SALE_END_TIME = 1518739140;
 
     uint256 public totalEtherContributed = 0;
     uint256 public totalTokensToSupply = 0;
