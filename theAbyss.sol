@@ -135,10 +135,11 @@ contract TheAbyssCrowdsale is Ownable, SafeMath, Pausable {
     uint256 public constant PRESALE_ETHER_MIN_CONTRIB = 1 ether;
     uint256 public constant SALE_ETHER_MIN_CONTRIB = 0.1 ether;
 
+    uint256 public constant PRESALE_CAP = 10000 ether;
     uint256 public constant HARD_CAP = 100000 ether;
 
-    uint256 public constant PRE_SALE_START_TIME = 1513263600;
-    uint256 public constant PRE_SALE_END_TIME = 1514764740;
+    uint256 public constant PRESALE_START_TIME = 1513609200;
+    uint256 public constant PRESALE_END_TIME = 1514764740;
 
     uint256 public constant SALE_START_TIME = 1515510000;
     uint256 public constant SALE_END_TIME = 1518739140;
@@ -154,12 +155,18 @@ contract TheAbyssCrowdsale is Ownable, SafeMath, Pausable {
     event LogContribution(address indexed contributor, uint256 amountWei, uint256 tokenAmount, uint256 tokenBonus, uint256 timestamp);
 
     modifier checkContribution() {
-        require((now >= PRE_SALE_START_TIME && now < PRE_SALE_END_TIME && msg.value >= PRESALE_ETHER_MIN_CONTRIB) || (now >= SALE_START_TIME && now < SALE_END_TIME && msg.value >= SALE_ETHER_MIN_CONTRIB));
+        require(
+            (now >= PRESALE_START_TIME && now < PRESALE_END_TIME && msg.value >= PRESALE_ETHER_MIN_CONTRIB) ||
+            (now >= SALE_START_TIME && now < SALE_END_TIME && msg.value >= SALE_ETHER_MIN_CONTRIB)
+        );
         _;
     }
 
     modifier checkCap() {
-        require(safeAdd(totalEtherContributed, msg.value) <= HARD_CAP);
+        require(
+            (now >= PRESALE_START_TIME && now < PRESALE_END_TIME && safeAdd(totalEtherContributed, msg.value) <= PRESALE_CAP) ||
+            (now >= SALE_START_TIME && now < SALE_END_TIME && safeAdd(totalEtherContributed, msg.value) <= HARD_CAP)
+        );
         _;
     }
 
@@ -177,7 +184,7 @@ contract TheAbyssCrowdsale is Ownable, SafeMath, Pausable {
         uint256 numerator = 0;
         uint256 denominator = 100;
 
-        if(now >= PRE_SALE_START_TIME && now < PRE_SALE_END_TIME) {
+        if(now >= PRESALE_START_TIME && now < PRESALE_END_TIME) {
             numerator = 25;
         } else if(now >= SALE_START_TIME && now < SALE_END_TIME) {
             if(now < bonusWindow1EndTime) {
